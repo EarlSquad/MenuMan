@@ -109,6 +109,30 @@ public class SurfaceViewWithOverlay extends SurfaceView {
     this.invalidate();
   }
 
+  void drawBitmapAtCoordinate(Canvas canvas, Point topRight, Point botRight) {
+    int halfWidth = (topRight.y - botRight.y) / 2;
+    int size = (botRight.y - topRight.y) * 2;
+    Bitmap b=BitmapFactory.decodeResource(getResources(), R.drawable.food);
+    Bitmap scaledb = Bitmap.createScaledBitmap(b, size, size, false);
+    canvas.drawBitmap(scaledb, topRight.x - halfWidth, topRight.y + halfWidth, null);
+  }
+
+  void drawTrapezium(Canvas canvas, Point topRight, Point botRight, int height) {
+    int halfWidth = (topRight.y - botRight.y) / 2;
+    Path path = new Path();
+    path.moveTo(topRight.x, topRight.y);
+    path.lineTo(botRight.x, botRight.y);
+    path.lineTo(botRight.x - halfWidth, botRight.y - halfWidth);
+    path.lineTo(topRight.x - halfWidth, topRight.y + halfWidth);
+    path.lineTo(topRight.x, topRight.y);
+    path.close();
+
+    Paint paint = new Paint();
+    paint.setARGB(100, 255, 255, 255);
+    paint.setStyle(Paint.Style.FILL);
+    canvas.drawPath(path, paint);
+  }
+
   @Override
   protected void onDraw(Canvas canvas) {
     super.onDraw(canvas);
@@ -151,6 +175,10 @@ public class SurfaceViewWithOverlay extends SurfaceView {
         p = quads[j + 3];
         path.lineTo(p.x, p.y);
         path.close();
+        Point topRight = quads[j+2];
+        Point botRight = quads[j+3];
+        drawTrapezium(canvas, topRight, botRight, 500);
+        drawBitmapAtCoordinate(canvas, topRight, botRight);
         canvas.drawPath(path, lineBoundariesPaint);
 
         // The skewed text (drawn by coordinate transform)
