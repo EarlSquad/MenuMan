@@ -124,6 +124,14 @@ public class CameraActivity extends Activity {
             if (resultStatus == ITextCaptureService.ResultStabilityStatus.Stable) {
               // Stable result has been reached.
               // TODO: search for menu item
+              /*
+              // TODO: move menuAPI to a field
+              // This is how you use MenuAPI
+              String apiKey = getString(R.string.customsearch_api_key);
+              String cx = getString(R.string.customsearch_cx);
+              MenuAPI menuAPI = new MenuAPI(apiKey, cx);
+              menuAPI.searchThumbnail("spaghetti");  // should return url of thumbnail
+              */
             }
           }
         }
