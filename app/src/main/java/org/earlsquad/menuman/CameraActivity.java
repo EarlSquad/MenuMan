@@ -45,7 +45,7 @@ public class CameraActivity extends Activity {
   ///////////////////////////////////////////////////////////////////////////////
   // Text displayed on start button
   private static final String BUTTON_TEXT_START = "Start";
-  private static final String BUTTON_TEXT_STOP = "Stop";
+  private static final String BUTTON_TEXT_STOP = "Pause";
   private static final String BUTTON_TEXT_STARTING = "Starting...";
   // A subset of available languages shown in the UI. See all available languages in Language enum.
   // To show all languages in the UI you can substitute the list below with:
@@ -122,14 +122,8 @@ public class CameraActivity extends Activity {
             warningTextView.setText(warning != null ? warning.name() : "");
 
             if (resultStatus == ITextCaptureService.ResultStabilityStatus.Stable) {
-              // Stable result has been reached. Stop the service
-              stopRecognition();
-              stableResultHasBeenReached = true;
-
-              // Show result to the user. In this sample we whiten screen background and play
-              // the same sound that is used for pressing buttons
-              surfaceViewWithOverlay.setFillBackground(true);
-              startButton.playSoundEffect(android.view.SoundEffectConstants.CLICK);
+              // Stable result has been reached.
+              // TODO: search for menu item
             }
           }
         }
