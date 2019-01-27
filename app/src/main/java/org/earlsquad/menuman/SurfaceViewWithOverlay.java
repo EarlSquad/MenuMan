@@ -237,7 +237,7 @@ public class SurfaceViewWithOverlay extends SurfaceView {
         path.close();
         Point topRight = quads[j+2];
         Point botRight = quads[j+3];
-        drawTrapezium(canvas, topRight, botRight, 500);
+        drawTextBox(canvas, topRight, botRight);
         if (bitmaps[i] != null) {
           drawBitmapAtCoordinate(canvas, bitmaps[i], topRight, botRight);
         }
