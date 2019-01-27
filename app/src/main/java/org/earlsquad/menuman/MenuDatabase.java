@@ -56,18 +56,35 @@ public class MenuDatabase {
 
   public MenuItem search(String word) {
     MenuItem ans = null;
-    int mindiff = 1000;
+    int mindist = 1000;
     for(MenuItem item : menu) {
-      int difference = Math.abs(item.getRealName().compareToIgnoreCase(word));
-      if(difference < mindiff) {
-        mindiff = difference;
+      int difference = calculateDist(item.getRealName(), word);
+      if(difference < mindist) {
+        mindist = difference;
         ans = item;
       }
     }
-    if(mindiff < 4) {
+    if(mindist < 5) {
       return ans;
     } else {
       return null;
     }
+  }
+
+  private int calculateDist(String x, String y) {
+    int[][] dp = new int[x.length() + 1][y.length() + 1];
+
+    for (int i = 0; i <= x.length(); i++) {
+      for (int j = 0; j <= y.length(); j++) {
+        if (i == 0) {
+          dp[i][j] = j;
+        } else if (j == 0) {
+          dp[i][j] = i;
+        } else {
+          dp[i][j] = Math.min(Math.min(dp[i - 1][j - 1] + 1, dp[i - 1][j] + 1), dp[i][j - 1] + 1);
+        }
+      }
+    }
+    return dp[x.length()][y.length()];
   }
 }

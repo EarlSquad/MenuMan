@@ -149,7 +149,7 @@ public class SurfaceViewWithOverlay extends SurfaceView {
 
   void drawBitmapAtCoordinate(Canvas canvas, Bitmap bitmap, Point topRight, Point botRight) {
     int halfWidth = (topRight.y - botRight.y) / 2;
-    int size = (botRight.y - topRight.y) * 2;
+    int size = Math.min(500, (botRight.y - topRight.y) * 2);
     if (size > 0) {
       Bitmap scaledb = Bitmap.createScaledBitmap(bitmap, size, size, false);
       canvas.drawBitmap(scaledb, topRight.x - halfWidth, topRight.y + halfWidth, null);
