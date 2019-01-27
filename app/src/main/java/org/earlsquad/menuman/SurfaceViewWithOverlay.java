@@ -24,6 +24,7 @@ public class SurfaceViewWithOverlay extends SurfaceView {
   private Paint areaOfInterestPaint;
   private String[] urls;
   private Bitmap[] bitmaps;
+  private Target[] picassoTargets = new Target[0];
 
   public SurfaceViewWithOverlay(Context context) {
     super(context);
@@ -69,27 +70,30 @@ public class SurfaceViewWithOverlay extends SurfaceView {
   }
 
   private void loadBitmaps() {
+    for (Target target : picassoTargets) {
+      Picasso.get().cancelRequest(target);
+    }
+    this.picassoTargets = new Target[urls.length];
     this.bitmaps = new Bitmap[urls.length];
     for (int i = 0; i < urls.length; i++) {
       final int finalI = i;
+      Target target = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+          bitmaps[finalI] = bitmap;
+          invalidate();
+        }
+
+        @Override
+        public void onBitmapFailed(Exception e, Drawable errorDrawable) {}
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {}
+      };
+      picassoTargets[i] = target;
       Picasso.get()
           .load(urls[i])
-          .into(
-              new Target() {
-                @Override
-                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                  if (finalI < bitmaps.length) {
-                    bitmaps[finalI] = bitmap;
-                    invalidate();
-                  }
-                }
-
-                @Override
-                public void onBitmapFailed(Exception e, Drawable errorDrawable) {}
-
-                @Override
-                public void onPrepareLoad(Drawable placeHolderDrawable) {}
-              });
+          .into(target);
     }
   }
 
