@@ -122,13 +122,15 @@ public class SurfaceViewWithOverlay extends SurfaceView {
     if(url != null) {
       foodURL = url;
     }
-    final int halfWidth = (topRight.y - botRight.y) / 2;
-    final int size = (botRight.y - topRight.y) * 2;
+    final int width = botRight.y - topRight.y;
+    final int mid = (botRight.y + topRight.y) / 2;
+    final int size = Math.min(500, width * 3);
+
     Picasso.get().load(foodURL).into(new Target() {
       @Override
       public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
         Bitmap food = Bitmap.createScaledBitmap(bitmap, size, size, false);
-        canvas.drawBitmap(food, topRight.x - halfWidth, topRight.y + halfWidth, null);
+        canvas.drawBitmap(food, (float) (topRight.x + 1.25 * width), (float) Math.max(0, mid - 1.5 * width), null);
       }
 
       @Override
@@ -149,6 +151,27 @@ public class SurfaceViewWithOverlay extends SurfaceView {
     path.lineTo(botRight.x - halfWidth, botRight.y - halfWidth);
     path.lineTo(topRight.x - halfWidth, topRight.y + halfWidth);
     path.lineTo(topRight.x, topRight.y);
+    path.close();
+
+    Paint paint = new Paint();
+    paint.setARGB(100, 255, 255, 255);
+    paint.setStyle(Paint.Style.FILL);
+    canvas.drawPath(path, paint);
+  }
+
+  void drawTextBox(Canvas canvas, Point topRight, Point botRight) {
+    int width = (botRight.y - topRight.y);
+    int halfWidth = width / 2;
+    int mid = (topRight.y + botRight.y) / 2;
+    Path path = new Path();
+    path.moveTo(topRight.x + halfWidth, mid);
+    path.lineTo(topRight.x + width, topRight.y);
+    path.lineTo(topRight.x + width, (float) Math.max(0, topRight.y - 1.25 * width));
+    path.lineTo((float) (topRight.x + 4.5 * width), (float) Math.max(0, topRight.y - 1.25 * width));
+    path.lineTo((float) (topRight.x + 4.5 * width), (float) (botRight.y + 1.25 * width));
+    path.lineTo(topRight.x + width, (float) (botRight.y + 1.25 * width));
+    path.lineTo(topRight.x + width, botRight.y);
+    path.lineTo(topRight.x + halfWidth, mid);
     path.close();
 
     Paint paint = new Paint();
@@ -201,7 +224,9 @@ public class SurfaceViewWithOverlay extends SurfaceView {
         path.close();
         Point topRight = quads[j+2];
         Point botRight = quads[j+3];
-        drawTrapezium(canvas, topRight, botRight, 500);
+//        drawTrapezium(canvas, topRight, botRight, 500);
+//        drawBitmapAtCoordinate(canvas, topRight, botRight, null);
+        drawTextBox(canvas, topRight, botRight);
         drawBitmapAtCoordinate(canvas, topRight, botRight, null);
         canvas.drawPath(path, lineBoundariesPaint);
 
