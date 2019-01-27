@@ -59,6 +59,7 @@ public class MenuDatabase {
     int mindiff = 1000;
     for(MenuItem item : menu) {
       int difference = Math.abs(item.getRealName().compareToIgnoreCase(word));
+      System.out.println("DIFFERENCE " + word + " vs. " + item.getRealName() + " - " + difference);
       if(difference < mindiff) {
         mindiff = difference;
         ans = item;
@@ -69,5 +70,10 @@ public class MenuDatabase {
     } else {
       return null;
     }
+  }
+
+  public void test() {
+    MenuItem result = search("CAVIAR DE SOLOGNE");
+    System.out.println(result);
   }
 }

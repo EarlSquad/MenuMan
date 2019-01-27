@@ -117,6 +117,7 @@ public class CameraActivity extends Activity {
               for (ITextCaptureService.TextLine line : lines) {
                 MenuItem searchResult = database.search(line.Text);
                 if (searchResult != null) {
+//                  Log.d("SEARCH", line.Text + " => " + searchResult);
                   filteredLines.add(line);
                   urls.add(searchResult.getImageURL1());
                 }
@@ -125,7 +126,7 @@ public class CameraActivity extends Activity {
               String[] urlsArr = new String[urls.size()];
               filteredLines.toArray(filteredLinesArr);
               urls.toArray(urlsArr);
-              Log.d("URLS", Arrays.toString(urlsArr));
+//              Log.d("URLS", Arrays.toString(urlsArr));
               surfaceViewWithOverlay.setLines(filteredLinesArr, resultStatus, urlsArr);
             } else {
               // The result is not stable. Show nothing
@@ -715,6 +716,7 @@ public class CameraActivity extends Activity {
     setContentView(R.layout.activity_camera);
 
     database = new MenuDatabase(CameraActivity.this);
+    database.test();
 
     // Retrieve some ui components
     warningTextView = findViewById(R.id.warningText);
