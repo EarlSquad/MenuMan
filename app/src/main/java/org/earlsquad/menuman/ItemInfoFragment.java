@@ -28,8 +28,10 @@ public class ItemInfoFragment extends Fragment {
     MenuItem result = database.search(name);
 
     TextView foreignName = view.findViewById(R.id.menu_item_foreign_name);
+    TextView englishName = view.findViewById(R.id.menu_item_english_name);
 
-    foreignName.setText(name);
+    foreignName.setText(result.getRealName());
+    englishName.setText(result.getEngName());
     return view;
   }
 
