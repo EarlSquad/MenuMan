@@ -125,12 +125,14 @@ public class SurfaceViewWithOverlay extends SurfaceView {
     final int width = botRight.y - topRight.y;
     final int mid = (botRight.y + topRight.y) / 2;
     final int size = Math.min(500, width * 3);
+//    final int size = 300;
 
-    Picasso.get().load(foodURL).into(new Target() {
+    Picasso.get().load("http://befreshcorp.net/wp-content/uploads/2017/07/product-packshot-mango.jpg").into(new Target() {
       @Override
       public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
         Bitmap food = Bitmap.createScaledBitmap(bitmap, size, size, false);
-        canvas.drawBitmap(food, (float) (topRight.x + 1.25 * width), (float) Math.max(0, mid - 1.5 * width), null);
+        canvas.drawBitmap(food, (float) Math.max(0, (topRight.x + 1.25 * width)), (float) Math.max(0, mid - 1.5 * width), null);
+//          canvas.drawBitmap(food, 50, 50, null);
       }
 
       @Override

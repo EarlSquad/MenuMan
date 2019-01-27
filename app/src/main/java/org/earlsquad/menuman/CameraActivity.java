@@ -14,8 +14,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
@@ -26,9 +28,12 @@ import com.abbyy.mobile.rtr.Language;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("deprecation")
-public class CameraActivity extends Activity {
+import butterknife.OnClick;
 
+@SuppressWarnings("deprecation")
+public class CameraActivity extends AppCompatActivity {
+
+  BottomSheetBehavior sheetBehavior;
   ///////////////////////////////////////////////////////////////////////////////
   // Some application settings that can be changed to modify application behavior:
   // The camera zoom. Optically zooming with a good camera often improves results
@@ -729,6 +734,17 @@ public class CameraActivity extends Activity {
     }
 
     layout.setOnClickListener(clickListener);
+//    sheetBehavior.setBottomSheetCallback();
+    @OnClick(R.id.btn_bottom_sheet)
+    public void toggleBottomSheet() {
+      if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+        sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        btnBottomSheet.setText("Close sheet");
+      } else {
+        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        btnBottomSheet.setText("Expand sheet");
+      }
+    }
   }
 
   @Override
