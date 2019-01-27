@@ -1,43 +1,81 @@
 package org.earlsquad.menuman;
 
 public class MenuItem {
-  private String realName;
-  private String engName;
-  private String imageURL1 = "http://www.bennettig.com/wordpress/wp-content/uploads/2018/07/square-placeholder.jpg";
-  private String imageURL2 = "http://www.bennettig.com/wordpress/wp-content/uploads/2018/07/square-placeholder.jpg";
-  private String description = "dummy description";
+    private String realName;
+    private String engName;
+    private String imageURL1;
+    private String imageURL2;
+    private String ingredients;
+    private String allergies;
+    private String calories;
+    private String carbs;
+    private String fats;
+    private String proteins;
+    private String fact;
 
-  public MenuItem(String realName, String engName, String imageURL1, String imageURL2) {
-    this.realName = realName;
-    this.engName = engName;
-    if (imageURL1 != null && !imageURL1.isEmpty())
-      this.imageURL1 = imageURL1;
-    if (imageURL2 != null && !imageURL2.isEmpty())
-      this.imageURL2 = imageURL2;
-  }
+    public String getIngredients() {
+        return ingredients;
+    }
 
-  public String getRealName() {
-    return realName;
-  }
+    public String getAllergies() {
+        return allergies;
+    }
 
-  public String getEngName() {
-    return engName;
-  }
+    public String getCalories() {
+        return calories;
+    }
 
-  public String getImageURL1() {
-    return imageURL1;
-  }
+    public String getCarbs() {
+        return carbs;
+    }
 
-  public String getImageURL2() {
-    return imageURL2;
-  }
+    public String getFats() {
+        return fats;
+    }
 
-  @Override
-  public String toString() {
-    return "MenuItem{" + "realName='" + realName + '\'' + ", engName='" + engName + '\'' + '}';
-  }
+    public String getProteins() {
+        return proteins;
+    }
 
-  public String getDescription() {
-    return description;
-  }
+    public String getFact() {
+        return fact;
+    }
+
+    public MenuItem(String realName, String engName, String imageURL1, String imageURL2, String ingredients, String allergies, String calories, String carbs, String fats, String proteins, String fact) {
+        this.realName = realName;
+        this.engName = engName;
+        this.imageURL1 = imageURL1;
+        this.imageURL2 = imageURL2;
+        this.ingredients = ingredients;
+        this.allergies = allergies;
+        this.calories = calories;
+        this.carbs = carbs;
+        this.fats = fats;
+        this.proteins = proteins;
+        this.fact = fact;
+    }
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public String getEngName() {
+        return engName;
+    }
+
+    public String getImageURL1() {
+        return imageURL1;
+    }
+
+    public String getImageURL2() {
+        return imageURL2;
+    }
+
+    @Override
+    public String toString() {
+        return "MenuItem{" +
+            "realName='" + realName + '\'' +
+            ", engName='" + engName + '\'' +
+            '}';
+    }
 }
