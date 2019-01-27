@@ -55,6 +55,19 @@ public class MenuDatabase {
   }
 
   public MenuItem search(String word) {
-    return menu.get(0);
+    MenuItem ans = null;
+    int mindiff = 1000;
+    for(MenuItem item : menu) {
+      int difference = Math.abs(item.getRealName().compareToIgnoreCase(word));
+      if(difference < mindiff) {
+        mindiff = difference;
+        ans = item;
+      }
+    }
+    if(mindiff < 4) {
+      return ans;
+    } else {
+      return null;
+    }
   }
 }
