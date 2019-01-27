@@ -87,4 +87,9 @@ public class MenuDatabase {
     }
     return dp[x.length()][y.length()];
   }
+
+  public void test() {
+    MenuItem result = search("CAVIAR DE SOLOGNE");
+    System.out.println(result);
+  }
 }

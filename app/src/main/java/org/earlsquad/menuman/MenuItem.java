@@ -28,4 +28,12 @@ public class MenuItem {
     public String getImageURL2() {
         return imageURL2;
     }
+
+    @Override
+    public String toString() {
+        return "MenuItem{" +
+            "realName='" + realName + '\'' +
+            ", engName='" + engName + '\'' +
+            '}';
+    }
 }
