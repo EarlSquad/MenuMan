@@ -20,9 +20,24 @@ import java.util.List;
 public class MenuDatabase {
 
   private Context context;
-
+  public List<MenuItem> menu = new ArrayList<>();
   public MenuDatabase(Context context) {
     this.context = context;
+  }
+
+  public MenuDatabase(String filename) {
+    AssetManager assets = context.getAssets();
+    try {
+      InputStream inputStream = assets.open(filename);
+      CSVReader reader = new CSVReader(new InputStreamReader(inputStream));
+      String[] nextLine;
+      while ((nextLine = reader.readNext()) != null) {
+        // nextLine[] is an array of values from the line
+        menu.add(new MenuItem(nextLine[0], nextLine[1], nextLine[2], nextLine[3]));
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   public List<MenuItem> readFromCSV(String filename) {
