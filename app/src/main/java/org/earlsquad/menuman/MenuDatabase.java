@@ -25,12 +25,12 @@ public class MenuDatabase {
     this.context = context;
     AssetManager assets = context.getAssets();
     try {
-      InputStream inputStream = assets.open("database/menu.csv");
+      InputStream inputStream = assets.open("database/final_menu.csv");
       CSVReader reader = new CSVReader(new InputStreamReader(inputStream));
       String[] nextLine;
       while ((nextLine = reader.readNext()) != null) {
         // nextLine[] is an array of values from the line
-        menu.add(new MenuItem(nextLine[1], nextLine[2], nextLine[3], nextLine[4]));
+        menu.add(new MenuItem(nextLine[1], nextLine[2], nextLine[3], nextLine[4], nextLine[5], nextLine[6], nextLine[7], nextLine[8], nextLine[9], nextLine[10], nextLine[11]));
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -46,7 +46,7 @@ public class MenuDatabase {
       String[] nextLine;
       while ((nextLine = reader.readNext()) != null) {
         // nextLine[] is an array of values from the line
-        menu.add(new MenuItem(nextLine[0], nextLine[1], nextLine[2], nextLine[3]));
+        menu.add(new MenuItem(nextLine[1], nextLine[2], nextLine[3], nextLine[4], nextLine[5], nextLine[6], nextLine[7], nextLine[8], nextLine[9], nextLine[10], nextLine[11]));
       }
     } catch (IOException e) {
       e.printStackTrace();
