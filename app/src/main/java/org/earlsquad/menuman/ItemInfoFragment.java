@@ -31,16 +31,26 @@ public class ItemInfoFragment extends Fragment {
 
     TextView foreignName = view.findViewById(R.id.menu_item_foreign_name);
     TextView englishName = view.findViewById(R.id.menu_item_english_name);
+    TextView calories = view.findViewById(R.id.menu_item_calories);
+    TextView carbs = view.findViewById(R.id.menu_item_carbs);
+    TextView fat = view.findViewById(R.id.menu_item_fat);
+    TextView protein = view.findViewById(R.id.menu_item_protein);
     TextView description = view.findViewById(R.id.menu_item_description);
     ImageView image1 = view.findViewById(R.id.menu_item_image1);
     ImageView image2 = view.findViewById(R.id.menu_item_image2);
 
     foreignName.setText(result.getRealName());
     englishName.setText(result.getEngName());
-    description.setText(result.getDescription());
+    calories.setText(result.getCalories());
+    carbs.setText(result.getCarbs());
+    fat.setText(result.getFats());
+    protein.setText(result.getProteins());
+    description.setText(result.getFact());
+    if (result.getImageURL1() != null && !result.getImageURL1().isEmpty())
       Picasso.get()
           .load(result.getImageURL1())
           .into(image1);
+    if (result.getImageURL2() != null && !result.getImageURL2().isEmpty())
       Picasso.get()
           .load(result.getImageURL2())
           .into(image2);
