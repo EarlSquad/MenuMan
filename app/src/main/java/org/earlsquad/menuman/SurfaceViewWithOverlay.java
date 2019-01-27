@@ -154,7 +154,8 @@ public class SurfaceViewWithOverlay extends SurfaceView {
     if(topRight.x + (1 + 3.5 * scale) * width > w) {
       if (size > 0) {
         Bitmap scaledb = Bitmap.createScaledBitmap(bitmap, size, size, false);
-        canvas.drawBitmap(scaledb, (float) (topRight.x - width * (0.75 + 3 * scale)), (float) (Math.max(0, topRight.y - ((width * 1.25) * scale))), null);
+//        canvas.drawBitmap(scaledb, (float) (topRight.x - width * (0.75 + 3 * scale)), (float) (Math.max(0, topRight.y - ((width * 1.25) * scale))), null);
+        canvas.drawBitmap(scaledb, (float) (w - width / 2 - size), (float) (Math.max(0, topRight.y - ((width * 1.25) * scale))), null);
       }
     } else {
       if (size > 0) {
@@ -186,15 +187,25 @@ public class SurfaceViewWithOverlay extends SurfaceView {
     int mid = (topRight.y + botRight.y) / 2;
 
     if(topRight.x + (1 + 3.5 * scale) * width > w) {
+//      Path path = new Path();
+//      path.moveTo(topRight.x, mid);
+//      path.lineTo(topRight.x - halfWidth, topRight.y);
+//      path.lineTo(topRight.x - halfWidth, (float) Math.max(0, topRight.y - (1.75 * scale - 0.5) * width));
+//      path.lineTo((float) (topRight.x - (3.5 * scale) * width), (float) Math.max(0, topRight.y - (1.75 * scale - 0.5) * width));
+//      path.lineTo((float) (topRight.x - (3.5 * scale) * width), (float) (botRight.y + (1.75 * scale - 0.5) * width));
+//      path.lineTo(topRight.x - halfWidth, (float) (botRight.y + (1.75 * scale - 0.5) * width));
+//      path.lineTo(topRight.x - halfWidth, botRight.y);
+//      path.lineTo(topRight.x, mid);
+//      path.close();
       Path path = new Path();
-      path.moveTo(topRight.x, mid);
-      path.lineTo(topRight.x - halfWidth, topRight.y);
-      path.lineTo(topRight.x - halfWidth, (float) Math.max(0, topRight.y - (1.75 * scale - 0.5) * width));
-      path.lineTo((float) (topRight.x - (3.5 * scale) * width), (float) Math.max(0, topRight.y - (1.75 * scale - 0.5) * width));
-      path.lineTo((float) (topRight.x - (3.5 * scale) * width), (float) (botRight.y + (1.75 * scale - 0.5) * width));
-      path.lineTo(topRight.x - halfWidth, (float) (botRight.y + (1.75 * scale - 0.5) * width));
-      path.lineTo(topRight.x - halfWidth, botRight.y);
-      path.lineTo(topRight.x, mid);
+      path.moveTo((float) (w - 3.5 * scale * width) - halfWidth, mid);
+      path.lineTo((float) (w - 3.5 * scale * width), topRight.y);
+      path.lineTo((float) (w - 3.5 * scale * width), (float) Math.max(0, topRight.y - (1.75 * scale - 0.5) * width));
+      path.lineTo((float) w, (float) Math.max(0, topRight.y - (1.75 * scale - 0.5) * width));
+      path.lineTo((float) w, (float) (botRight.y + (1.75 * scale - 0.5) * width));
+      path.lineTo((float) (w - 3.5 * scale * width), (float) (botRight.y + (1.75 * scale - 0.5) * width));
+      path.lineTo((float) (w - 3.5 * scale * width), botRight.y);
+      path.lineTo((float) (w - 3.5 * scale * width) - halfWidth, mid);
       path.close();
       Paint paint = new Paint();
       paint.setARGB(100, 255, 255, 255);
