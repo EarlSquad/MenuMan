@@ -23,9 +23,6 @@ public class MenuDatabase {
   public List<MenuItem> menu = new ArrayList<>();
   public MenuDatabase(Context context) {
     this.context = context;
-  }
-
-  public MenuDatabase() {
     AssetManager assets = context.getAssets();
     try {
       InputStream inputStream = assets.open("database/menu.csv");
@@ -33,7 +30,7 @@ public class MenuDatabase {
       String[] nextLine;
       while ((nextLine = reader.readNext()) != null) {
         // nextLine[] is an array of values from the line
-        menu.add(new MenuItem(nextLine[0], nextLine[1], nextLine[2], nextLine[3]));
+        menu.add(new MenuItem(nextLine[1], nextLine[2], nextLine[3], nextLine[4]));
       }
     } catch (IOException e) {
       e.printStackTrace();
