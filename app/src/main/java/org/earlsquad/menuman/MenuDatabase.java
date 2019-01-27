@@ -81,7 +81,7 @@ public class MenuDatabase {
         } else if (j == 0) {
           dp[i][j] = i;
         } else {
-          dp[i][j] = Math.min(Math.min(dp[i - 1][j - 1] + 1, dp[i - 1][j] + 1), dp[i][j - 1] + 1);
+          dp[i][j] = Math.min(Math.min(dp[i - 1][j - 1] + (x.charAt(i - 1) == y.charAt(j - 1) ? 0 : 1), dp[i - 1][j] + 1), dp[i][j - 1] + 1);
         }
       }
     }
