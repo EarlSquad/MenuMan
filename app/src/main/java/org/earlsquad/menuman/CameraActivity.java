@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
@@ -661,18 +662,20 @@ public class CameraActivity extends Activity {
 
   // The 'Start' and 'Stop' button
   public void onStartButtonClick(View view) {
-    if (startButton.getText().equals(BUTTON_TEXT_STOP)) {
-      stopRecognition();
-    } else {
-      clearRecognitionResults();
-      startButton.setEnabled(false);
-      startButton.setText(BUTTON_TEXT_STARTING);
-      if (!isContinuousVideoFocusModeEnabled(camera)) {
-        autoFocus(startRecognitionCameraAutoFocusCallback);
-      } else {
-        startRecognition();
-      }
-    }
+    Intent startInformationActivity = new Intent(this, InformationActivity.class);
+    startActivity(startInformationActivity);
+//    if (startButton.getText().equals(BUTTON_TEXT_STOP)) {
+//      stopRecognition();
+//    } else {
+//      clearRecognitionResults();
+//      startButton.setEnabled(false);
+//      startButton.setText(BUTTON_TEXT_STARTING);
+//      if (!isContinuousVideoFocusModeEnabled(camera)) {
+//        autoFocus(startRecognitionCameraAutoFocusCallback);
+//      } else {
+//        startRecognition();
+//      }
+//    }
   }
 
   // Camera permission request handler for Android 6.0 and higher
