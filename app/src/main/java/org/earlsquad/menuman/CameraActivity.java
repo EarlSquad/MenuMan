@@ -28,10 +28,8 @@ import com.abbyy.mobile.rtr.Language;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.OnClick;
-
 @SuppressWarnings("deprecation")
-public class CameraActivity extends AppCompatActivity {
+public class CameraActivity extends Activity {
 
   BottomSheetBehavior sheetBehavior;
   ///////////////////////////////////////////////////////////////////////////////
@@ -734,17 +732,6 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     layout.setOnClickListener(clickListener);
-//    sheetBehavior.setBottomSheetCallback();
-    @OnClick(R.id.btn_bottom_sheet)
-    public void toggleBottomSheet() {
-      if (sheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
-        sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        btnBottomSheet.setText("Close sheet");
-      } else {
-        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        btnBottomSheet.setText("Expand sheet");
-      }
-    }
   }
 
   @Override
