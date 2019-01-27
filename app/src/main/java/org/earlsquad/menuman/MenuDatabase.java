@@ -57,7 +57,7 @@ public class MenuDatabase {
     return menu;
   }
 
-  public MenuItem search(String word, List<MenuItem> menu) {
+  public MenuItem search(String word) {
     return menu.get(0);
   }
 }
