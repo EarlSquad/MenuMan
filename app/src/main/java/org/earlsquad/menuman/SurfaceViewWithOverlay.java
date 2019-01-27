@@ -147,12 +147,12 @@ public class SurfaceViewWithOverlay extends SurfaceView {
     this.invalidate();
   }
 
-  void drawBitmapAtCoordinate(Canvas canvas, Bitmap bitmap, Point topRight, Point botRight) {
+  void drawBitmapAtCoordinate(Canvas canvas, Bitmap bitmap, Point topRight, Point botRight, int scale) {
       int width = Math.max(0, (botRight.y - topRight.y));
-      int size = Math.min(500, width * 3);
+      int size = Math.min(600, width * 3 * scale);
     if (size > 0) {
       Bitmap scaledb = Bitmap.createScaledBitmap(bitmap, size, size, false);
-      canvas.drawBitmap(scaledb, (float) (topRight.x + width * 1.25), (float) (Math.max(0, topRight.y - width)), null);
+      canvas.drawBitmap(scaledb, (float) (topRight.x + width * 1.5), (float) (Math.max(0, topRight.y - ((width * 1.25) * scale))), null);
     }
   }
 
@@ -172,17 +172,17 @@ public class SurfaceViewWithOverlay extends SurfaceView {
     canvas.drawPath(path, paint);
   }
 
-  void drawTextBox(Canvas canvas, Point topRight, Point botRight) {
+  void drawTextBox(Canvas canvas, Point topRight, Point botRight, float scale) {
     int width = (botRight.y - topRight.y);
     int halfWidth = width / 2;
     int mid = (topRight.y + botRight.y) / 2;
     Path path = new Path();
     path.moveTo(topRight.x + halfWidth, mid);
     path.lineTo(topRight.x + width, topRight.y);
-    path.lineTo(topRight.x + width, (float) Math.max(0, topRight.y - 1.25 * width));
-    path.lineTo((float) (topRight.x + 4.5 * width), (float) Math.max(0, topRight.y - 1.25 * width));
-    path.lineTo((float) (topRight.x + 4.5 * width), (float) (botRight.y + 1.25 * width));
-    path.lineTo(topRight.x + width, (float) (botRight.y + 1.25 * width));
+    path.lineTo(topRight.x + width, (float) Math.max(0, topRight.y - (1.75 * scale - 0.5) * width));
+    path.lineTo((float) (topRight.x + (1 + 3.5 * scale) * width), (float) Math.max(0, topRight.y - (1.75 * scale - 0.5) * width));
+    path.lineTo((float) (topRight.x + (1 + 3.5 * scale) * width), (float) (botRight.y + (1.75 * scale - 0.5) * width));
+    path.lineTo(topRight.x + width, (float) (botRight.y + (1.75 * scale - 0.5) * width));
     path.lineTo(topRight.x + width, botRight.y);
     path.lineTo(topRight.x + halfWidth, mid);
     path.close();
@@ -237,9 +237,9 @@ public class SurfaceViewWithOverlay extends SurfaceView {
         path.close();
         Point topRight = quads[j+2];
         Point botRight = quads[j+3];
-        drawTextBox(canvas, topRight, botRight);
+        drawTextBox(canvas, topRight, botRight, 2);
         if (bitmaps[i] != null) {
-          drawBitmapAtCoordinate(canvas, bitmaps[i], topRight, botRight);
+          drawBitmapAtCoordinate(canvas, bitmaps[i], topRight, botRight, 2);
         }
         canvas.drawPath(path, lineBoundariesPaint);
 
