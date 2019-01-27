@@ -2,8 +2,11 @@ package org.earlsquad.menuman;
 
 import android.content.Context;
 import android.graphics.*;
+import android.graphics.drawable.Drawable;
 import android.view.SurfaceView;
 import com.abbyy.mobile.rtr.ITextCaptureService;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 // Surface View combined with an overlay showing recognition results and 'progress'
 public class SurfaceViewWithOverlay extends SurfaceView {
@@ -19,6 +22,9 @@ public class SurfaceViewWithOverlay extends SurfaceView {
   private Paint lineBoundariesPaint;
   private Paint backgroundPaint;
   private Paint areaOfInterestPaint;
+  private String[] urls;
+  private Bitmap[] bitmaps;
+  private Target[] picassoTargets = new Target[0];
 
   public SurfaceViewWithOverlay(Context context) {
     super(context);
@@ -63,12 +69,44 @@ public class SurfaceViewWithOverlay extends SurfaceView {
     invalidate();
   }
 
+  private void loadBitmaps() {
+    for (Target target : picassoTargets) {
+      Picasso.get().cancelRequest(target);
+    }
+    this.picassoTargets = new Target[urls.length];
+    this.bitmaps = new Bitmap[urls.length];
+    for (int i = 0; i < urls.length; i++) {
+      final int finalI = i;
+      Target target = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+          bitmaps[finalI] = bitmap;
+          invalidate();
+        }
+
+        @Override
+        public void onBitmapFailed(Exception e, Drawable errorDrawable) {}
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {}
+      };
+      picassoTargets[i] = target;
+      Picasso.get()
+          .load(urls[i])
+          .into(target);
+    }
+  }
+
   void setLines(
       ITextCaptureService.TextLine[] lines,
-      ITextCaptureService.ResultStabilityStatus resultStatus) {
+      ITextCaptureService.ResultStabilityStatus resultStatus,
+      String[] urls
+  ) {
     if (lines != null && scaleDenominatorX > 0 && scaleDenominatorY > 0) {
       this.quads = new Point[lines.length * 4];
       this.lines = new String[lines.length];
+      this.urls = urls;
+      loadBitmaps();
       for (int i = 0; i < lines.length; i++) {
         ITextCaptureService.TextLine line = lines[i];
         for (int j = 0; j < 4; j++) {
@@ -107,6 +145,52 @@ public class SurfaceViewWithOverlay extends SurfaceView {
       this.quads = null;
     }
     this.invalidate();
+  }
+
+  void drawBitmapAtCoordinate(Canvas canvas, Bitmap bitmap, Point topRight, Point botRight) {
+    int halfWidth = (topRight.y - botRight.y) / 2;
+    int size = (botRight.y - topRight.y) * 2;
+    if (size > 0) {
+      Bitmap scaledb = Bitmap.createScaledBitmap(bitmap, size, size, false);
+      canvas.drawBitmap(scaledb, topRight.x - halfWidth, topRight.y + halfWidth, null);
+    }
+  }
+
+  void drawTrapezium(Canvas canvas, Point topRight, Point botRight, int height) {
+    int halfWidth = (topRight.y - botRight.y) / 2;
+    Path path = new Path();
+    path.moveTo(topRight.x, topRight.y);
+    path.lineTo(botRight.x, botRight.y);
+    path.lineTo(botRight.x - halfWidth, botRight.y - halfWidth);
+    path.lineTo(topRight.x - halfWidth, topRight.y + halfWidth);
+    path.lineTo(topRight.x, topRight.y);
+    path.close();
+
+    Paint paint = new Paint();
+    paint.setARGB(100, 255, 255, 255);
+    paint.setStyle(Paint.Style.FILL);
+    canvas.drawPath(path, paint);
+  }
+
+  void drawTextBox(Canvas canvas, Point topRight, Point botRight) {
+    int width = (botRight.y - topRight.y);
+    int halfWidth = width / 2;
+    int mid = (topRight.y + botRight.y) / 2;
+    Path path = new Path();
+    path.moveTo(topRight.x + halfWidth, mid);
+    path.lineTo(topRight.x + width, topRight.y);
+    path.lineTo(topRight.x + width, (float) Math.max(0, topRight.y - 1.25 * width));
+    path.lineTo((float) (topRight.x + 4.5 * width), (float) Math.max(0, topRight.y - 1.25 * width));
+    path.lineTo((float) (topRight.x + 4.5 * width), (float) (botRight.y + 1.25 * width));
+    path.lineTo(topRight.x + width, (float) (botRight.y + 1.25 * width));
+    path.lineTo(topRight.x + width, botRight.y);
+    path.lineTo(topRight.x + halfWidth, mid);
+    path.close();
+
+    Paint paint = new Paint();
+    paint.setARGB(100, 255, 255, 255);
+    paint.setStyle(Paint.Style.FILL);
+    canvas.drawPath(path, paint);
   }
 
   @Override
@@ -151,6 +235,12 @@ public class SurfaceViewWithOverlay extends SurfaceView {
         p = quads[j + 3];
         path.lineTo(p.x, p.y);
         path.close();
+        Point topRight = quads[j+2];
+        Point botRight = quads[j+3];
+        drawTextBox(canvas, topRight, botRight);
+        if (bitmaps[i] != null) {
+          drawBitmapAtCoordinate(canvas, bitmaps[i], topRight, botRight);
+        }
         canvas.drawPath(path, lineBoundariesPaint);
 
         // The skewed text (drawn by coordinate transform)

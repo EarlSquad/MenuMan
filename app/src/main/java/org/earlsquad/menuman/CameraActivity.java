@@ -110,11 +110,15 @@ public class CameraActivity extends Activity {
           if (!stableResultHasBeenReached) {
             if (resultStatus.ordinal() >= 3) {
               // The result is stable enough to show something to the user
-              surfaceViewWithOverlay.setLines(lines, resultStatus);
+              String[] urls = new String[lines.length];
+              for (int i = 0; i < urls.length; i++) {
+                urls[i] = "https://www.chinasichuanfood.com/wp-content/uploads/2014/09/xiao-long-bao-25-500x500.jpg";
+              }
+              surfaceViewWithOverlay.setLines(lines, resultStatus, urls);
             } else {
               // The result is not stable. Show nothing
               surfaceViewWithOverlay.setLines(
-                  null, ITextCaptureService.ResultStabilityStatus.NotReady);
+                  null, ITextCaptureService.ResultStabilityStatus.NotReady, null);
             }
 
             // Show the warning from the service if any. The warnings are intended for the user
@@ -476,7 +480,7 @@ public class CameraActivity extends Activity {
   // Clear recognition results
   private void clearRecognitionResults() {
     stableResultHasBeenReached = false;
-    surfaceViewWithOverlay.setLines(null, ITextCaptureService.ResultStabilityStatus.NotReady);
+    surfaceViewWithOverlay.setLines(null, ITextCaptureService.ResultStabilityStatus.NotReady, null);
     surfaceViewWithOverlay.setFillBackground(false);
   }
 
