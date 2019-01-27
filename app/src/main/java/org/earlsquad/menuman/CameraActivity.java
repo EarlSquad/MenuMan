@@ -43,7 +43,7 @@ public class CameraActivity extends AppCompatActivity {
   private static final boolean startRecognitionOnAppStart = true;
   // Area of interest specified through margin sizes relative to camera preview size
   private static final int areaOfInterestMargin_PercentOfWidth = 4;
-  private static final int areaOfInterestMargin_PercentOfHeight = 25;
+  private static final int areaOfInterestMargin_PercentOfHeight = 15;
   // Camera permission request code for Android 6.0 and higher
   private static final int CAMERA_PERMISSION_REQUEST_CODE = 42;
   ///////////////////////////////////////////////////////////////////////////////
@@ -112,11 +112,11 @@ public class CameraActivity extends AppCompatActivity {
           // even after the service has been stopped while the calls queued to this thread (UI
           // thread)
           // are being processed. Just ignore these calls:
+          menuItems.clear();
           if (!stableResultHasBeenReached) {
             if (resultStatus.ordinal() >= 3) {
               // The result is stable enough to show something to the user
               List<ITextCaptureService.TextLine> filteredLines = new ArrayList<>();
-              menuItems.clear();
               List<String> urls = new ArrayList<>();
               for (ITextCaptureService.TextLine line : lines) {
                 MenuItem searchResult = database.search(line.Text);
@@ -134,7 +134,6 @@ public class CameraActivity extends AppCompatActivity {
               urls.toArray(urlsArr);
               //              Log.d("URLS", Arrays.toString(urlsArr));
               surfaceViewWithOverlay.setLines(filteredLinesArr, resultStatus, urlsArr);
-              adapter.notifyDataSetChanged();
               if (filteredLines.size() == 0) {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
               } else if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
@@ -154,6 +153,7 @@ public class CameraActivity extends AppCompatActivity {
               // Stable result has been reached.
             }
           }
+          adapter.notifyDataSetChanged();
         }
 
         @Override
@@ -603,8 +603,9 @@ public class CameraActivity extends AppCompatActivity {
     // Area of interest
     int marginWidth = (areaOfInterestMargin_PercentOfWidth * width) / 100;
     int marginHeight = (areaOfInterestMargin_PercentOfHeight * height) / 100;
+    int offset = height * 5 / 100;
     surfaceViewWithOverlay.setAreaOfInterest(
-        new Rect(marginWidth, marginHeight, width - marginWidth, height - marginHeight));
+        new Rect(marginWidth, marginHeight - offset, width - marginWidth, height - marginHeight));
 
     // Start preview
     camera.startPreview();

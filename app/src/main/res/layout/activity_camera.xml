@@ -47,12 +47,12 @@
             android:layout_height="wrap_content"
             android:text="Start"
             android:id="@+id/startButton"
-            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:textSize="15dp"
             android:textColor="#ffffff"
             android:background="#7d010000"
-            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
             android:onClick="onStartButtonClick"/>
     </RelativeLayout>
 
