@@ -25,10 +25,10 @@ public class MenuDatabase {
     this.context = context;
   }
 
-  public MenuDatabase(String filename) {
+  public MenuDatabase() {
     AssetManager assets = context.getAssets();
     try {
-      InputStream inputStream = assets.open(filename);
+      InputStream inputStream = assets.open("database/menu.csv");
       CSVReader reader = new CSVReader(new InputStreamReader(inputStream));
       String[] nextLine;
       while ((nextLine = reader.readNext()) != null) {
