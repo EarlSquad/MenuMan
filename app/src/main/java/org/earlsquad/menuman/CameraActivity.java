@@ -123,7 +123,7 @@ public class CameraActivity extends AppCompatActivity {
                 if (searchResult != null) {
                   //                  Log.d("SEARCH", line.Text + " => " + searchResult);
                   filteredLines.add(line);
-                  menuItems.add(line.Text);
+                  menuItems.add(searchResult.getRealName());
                   urls.add(searchResult.getImageURL1());
                 }
               }
