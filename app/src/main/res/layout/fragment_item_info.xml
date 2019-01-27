@@ -32,41 +32,51 @@
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             android:gravity="center"
+            android:textSize="18sp"
             android:id="@+id/menu_item_english_name"/>
 
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textColor="@android:color/white"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/darker_gray"
+            android:orientation="horizontal">
+
+            <org.earlsquad.menuman.SquareImageView
+                android:id="@+id/menu_item_image1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="0dp"
+                android:scaleType="centerCrop"
+                tools:srcCompat="@tools:sample/backgrounds/scenic"/>
+
+            <org.earlsquad.menuman.SquareImageView
+                android:id="@+id/menu_item_image2"
+                android:layout_margin="0dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:scaleType="centerCrop"
+                tools:srcCompat="@tools:sample/backgrounds/scenic"/>
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/textView11"
-            android:layout_width="wrap_content"
+            android:id="@+id/menu_item_description"
+            android:padding="22dp"
+            android:textSize="18sp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="TextView"/>
+            android:textColor="@android:color/black"
+            android:text="Description"/>
 
-        <ImageView
-            android:id="@+id/imageView32"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            tools:srcCompat="@tools:sample/backgrounds/scenic"/>
-
-        <ImageView
-            android:id="@+id/imageView31"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            tools:srcCompat="@tools:sample/backgrounds/scenic"/>
     </LinearLayout>
 
 </LinearLayout>

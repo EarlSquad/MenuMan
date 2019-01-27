@@ -6,7 +6,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import com.squareup.picasso.Picasso;
 
 
 public class ItemInfoFragment extends Fragment {
@@ -29,9 +31,19 @@ public class ItemInfoFragment extends Fragment {
 
     TextView foreignName = view.findViewById(R.id.menu_item_foreign_name);
     TextView englishName = view.findViewById(R.id.menu_item_english_name);
+    TextView description = view.findViewById(R.id.menu_item_description);
+    ImageView image1 = view.findViewById(R.id.menu_item_image1);
+    ImageView image2 = view.findViewById(R.id.menu_item_image2);
 
     foreignName.setText(result.getRealName());
     englishName.setText(result.getEngName());
+    description.setText(result.getDescription());
+      Picasso.get()
+          .load(result.getImageURL1())
+          .into(image1);
+      Picasso.get()
+          .load(result.getImageURL2())
+          .into(image2);
     return view;
   }
 
