@@ -24,6 +24,7 @@ import com.abbyy.mobile.rtr.ITextCaptureService;
 import com.abbyy.mobile.rtr.Language;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings("deprecation")
@@ -64,6 +65,7 @@ public class CameraActivity extends Activity {
     Language.Russian,
     Language.Spanish
   };
+  private MenuDatabase database;
   private OCRService ocrService;
   // The camera and the preview surface
   private Camera camera;
@@ -110,11 +112,21 @@ public class CameraActivity extends Activity {
           if (!stableResultHasBeenReached) {
             if (resultStatus.ordinal() >= 3) {
               // The result is stable enough to show something to the user
-              String[] urls = new String[lines.length];
-              for (int i = 0; i < urls.length; i++) {
-                urls[i] = "https://www.chinasichuanfood.com/wp-content/uploads/2014/09/xiao-long-bao-25-500x500.jpg";
+              List<ITextCaptureService.TextLine> filteredLines = new ArrayList<>();
+              List<String> urls = new ArrayList<>();
+              for (ITextCaptureService.TextLine line : lines) {
+                MenuItem searchResult = database.search(line.Text);
+                if (searchResult != null) {
+                  filteredLines.add(line);
+                  urls.add(searchResult.getImageURL1());
+                }
               }
-              surfaceViewWithOverlay.setLines(lines, resultStatus, urls);
+              ITextCaptureService.TextLine[] filteredLinesArr = new ITextCaptureService.TextLine[filteredLines.size()];
+              String[] urlsArr = new String[urls.size()];
+              filteredLines.toArray(filteredLinesArr);
+              urls.toArray(urlsArr);
+              Log.d("URLS", Arrays.toString(urlsArr));
+              surfaceViewWithOverlay.setLines(filteredLinesArr, resultStatus, urlsArr);
             } else {
               // The result is not stable. Show nothing
               surfaceViewWithOverlay.setLines(
@@ -127,15 +139,6 @@ public class CameraActivity extends Activity {
 
             if (resultStatus == ITextCaptureService.ResultStabilityStatus.Stable) {
               // Stable result has been reached.
-              // TODO: search for menu item
-              /*
-              // TODO: move menuAPI to a field
-              // This is how you use MenuAPI
-              String apiKey = getString(R.string.customsearch_api_key);
-              String cx = getString(R.string.customsearch_cx);
-              MenuAPI menuAPI = new MenuAPI(apiKey, cx);
-              menuAPI.searchThumbnail("spaghetti");  // should return url of thumbnail
-              */
             }
           }
         }
@@ -710,6 +713,8 @@ public class CameraActivity extends Activity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_camera);
+
+    database = new MenuDatabase(CameraActivity.this);
 
     // Retrieve some ui components
     warningTextView = findViewById(R.id.warningText);
