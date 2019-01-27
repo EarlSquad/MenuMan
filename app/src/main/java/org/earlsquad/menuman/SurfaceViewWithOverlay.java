@@ -2,8 +2,11 @@ package org.earlsquad.menuman;
 
 import android.content.Context;
 import android.graphics.*;
+import android.graphics.drawable.Drawable;
 import android.view.SurfaceView;
 import com.abbyy.mobile.rtr.ITextCaptureService;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 // Surface View combined with an overlay showing recognition results and 'progress'
 public class SurfaceViewWithOverlay extends SurfaceView {
@@ -19,6 +22,8 @@ public class SurfaceViewWithOverlay extends SurfaceView {
   private Paint lineBoundariesPaint;
   private Paint backgroundPaint;
   private Paint areaOfInterestPaint;
+  private String[] urls;
+  private Bitmap[] bitmaps;
 
   public SurfaceViewWithOverlay(Context context) {
     super(context);
@@ -63,12 +68,41 @@ public class SurfaceViewWithOverlay extends SurfaceView {
     invalidate();
   }
 
+  private void loadBitmaps() {
+    this.bitmaps = new Bitmap[urls.length];
+    for (int i = 0; i < urls.length; i++) {
+      final int finalI = i;
+      Picasso.get()
+          .load(urls[i])
+          .into(
+              new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                  if (finalI < bitmaps.length) {
+                    bitmaps[finalI] = bitmap;
+                    invalidate();
+                  }
+                }
+
+                @Override
+                public void onBitmapFailed(Exception e, Drawable errorDrawable) {}
+
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {}
+              });
+    }
+  }
+
   void setLines(
       ITextCaptureService.TextLine[] lines,
-      ITextCaptureService.ResultStabilityStatus resultStatus) {
+      ITextCaptureService.ResultStabilityStatus resultStatus,
+      String[] urls
+  ) {
     if (lines != null && scaleDenominatorX > 0 && scaleDenominatorY > 0) {
       this.quads = new Point[lines.length * 4];
       this.lines = new String[lines.length];
+      this.urls = urls;
+      loadBitmaps();
       for (int i = 0; i < lines.length; i++) {
         ITextCaptureService.TextLine line = lines[i];
         for (int j = 0; j < 4; j++) {
@@ -109,11 +143,10 @@ public class SurfaceViewWithOverlay extends SurfaceView {
     this.invalidate();
   }
 
-  void drawBitmapAtCoordinate(Canvas canvas, Point topRight, Point botRight) {
+  void drawBitmapAtCoordinate(Canvas canvas, Bitmap bitmap, Point topRight, Point botRight) {
     int halfWidth = (topRight.y - botRight.y) / 2;
     int size = (botRight.y - topRight.y) * 2;
-    Bitmap b=BitmapFactory.decodeResource(getResources(), R.drawable.food);
-    Bitmap scaledb = Bitmap.createScaledBitmap(b, size, size, false);
+    Bitmap scaledb = Bitmap.createScaledBitmap(bitmap, size, size, false);
     canvas.drawBitmap(scaledb, topRight.x - halfWidth, topRight.y + halfWidth, null);
   }
 
@@ -178,7 +211,9 @@ public class SurfaceViewWithOverlay extends SurfaceView {
         Point topRight = quads[j+2];
         Point botRight = quads[j+3];
         drawTrapezium(canvas, topRight, botRight, 500);
-        drawBitmapAtCoordinate(canvas, topRight, botRight);
+        if (bitmaps[i] != null) {
+          drawBitmapAtCoordinate(canvas, bitmaps[i], topRight, botRight);
+        }
         canvas.drawPath(path, lineBoundariesPaint);
 
         // The skewed text (drawn by coordinate transform)
