@@ -699,6 +699,9 @@ public class CameraActivity extends Activity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_camera);
 
+    ReadCSV readCSV = new ReadCSV(this);
+    readCSV.test();
+
     // Retrieve some ui components
     warningTextView = findViewById(R.id.warningText);
     errorTextView = findViewById(R.id.errorText);
