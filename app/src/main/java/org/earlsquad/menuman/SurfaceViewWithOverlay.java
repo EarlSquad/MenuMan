@@ -3,6 +3,7 @@ package org.earlsquad.menuman;
 import android.content.Context;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
+import android.view.Display;
 import android.view.SurfaceView;
 import com.abbyy.mobile.rtr.ITextCaptureService;
 import com.squareup.picasso.Picasso;
@@ -147,12 +148,19 @@ public class SurfaceViewWithOverlay extends SurfaceView {
     this.invalidate();
   }
 
-  void drawBitmapAtCoordinate(Canvas canvas, Bitmap bitmap, Point topRight, Point botRight, int scale) {
-      int width = Math.max(0, (botRight.y - topRight.y));
-      int size = Math.min(600, width * 3 * scale);
-    if (size > 0) {
-      Bitmap scaledb = Bitmap.createScaledBitmap(bitmap, size, size, false);
-      canvas.drawBitmap(scaledb, (float) (topRight.x + width * 1.5), (float) (Math.max(0, topRight.y - ((width * 1.25) * scale))), null);
+  void drawBitmapAtCoordinate(Canvas canvas, Bitmap bitmap, Point topRight, Point botRight, int scale, int w, int h) {
+    int width = Math.max(0, (botRight.y - topRight.y));
+    int size = Math.min(600, width * 3 * scale);
+    if(topRight.x + (1 + 3.5 * scale) * width > w) {
+      if (size > 0) {
+        Bitmap scaledb = Bitmap.createScaledBitmap(bitmap, size, size, false);
+        canvas.drawBitmap(scaledb, (float) (topRight.x - width * (0.75 + 3 * scale)), (float) (Math.max(0, topRight.y - ((width * 1.25) * scale))), null);
+      }
+    } else {
+      if (size > 0) {
+        Bitmap scaledb = Bitmap.createScaledBitmap(bitmap, size, size, false);
+        canvas.drawBitmap(scaledb, (float) (topRight.x + width * 1.5), (float) (Math.max(0, topRight.y - ((width * 1.25) * scale))), null);
+      }
     }
   }
 
@@ -172,25 +180,42 @@ public class SurfaceViewWithOverlay extends SurfaceView {
     canvas.drawPath(path, paint);
   }
 
-  void drawTextBox(Canvas canvas, Point topRight, Point botRight, float scale) {
+  void drawTextBox(Canvas canvas, Point topRight, Point botRight, float scale, int w, int h) {
     int width = (botRight.y - topRight.y);
     int halfWidth = width / 2;
     int mid = (topRight.y + botRight.y) / 2;
-    Path path = new Path();
-    path.moveTo(topRight.x + halfWidth, mid);
-    path.lineTo(topRight.x + width, topRight.y);
-    path.lineTo(topRight.x + width, (float) Math.max(0, topRight.y - (1.75 * scale - 0.5) * width));
-    path.lineTo((float) (topRight.x + (1 + 3.5 * scale) * width), (float) Math.max(0, topRight.y - (1.75 * scale - 0.5) * width));
-    path.lineTo((float) (topRight.x + (1 + 3.5 * scale) * width), (float) (botRight.y + (1.75 * scale - 0.5) * width));
-    path.lineTo(topRight.x + width, (float) (botRight.y + (1.75 * scale - 0.5) * width));
-    path.lineTo(topRight.x + width, botRight.y);
-    path.lineTo(topRight.x + halfWidth, mid);
-    path.close();
 
-    Paint paint = new Paint();
-    paint.setARGB(100, 255, 255, 255);
-    paint.setStyle(Paint.Style.FILL);
-    canvas.drawPath(path, paint);
+    if(topRight.x + (1 + 3.5 * scale) * width > w) {
+      Path path = new Path();
+      path.moveTo(topRight.x, mid);
+      path.lineTo(topRight.x - halfWidth, topRight.y);
+      path.lineTo(topRight.x - halfWidth, (float) Math.max(0, topRight.y - (1.75 * scale - 0.5) * width));
+      path.lineTo((float) (topRight.x - (3.5 * scale) * width), (float) Math.max(0, topRight.y - (1.75 * scale - 0.5) * width));
+      path.lineTo((float) (topRight.x - (3.5 * scale) * width), (float) (botRight.y + (1.75 * scale - 0.5) * width));
+      path.lineTo(topRight.x - halfWidth, (float) (botRight.y + (1.75 * scale - 0.5) * width));
+      path.lineTo(topRight.x - halfWidth, botRight.y);
+      path.lineTo(topRight.x, mid);
+      path.close();
+      Paint paint = new Paint();
+      paint.setARGB(100, 255, 255, 255);
+      paint.setStyle(Paint.Style.FILL);
+      canvas.drawPath(path, paint);
+    } else {
+      Path path = new Path();
+      path.moveTo(topRight.x + halfWidth, mid);
+      path.lineTo(topRight.x + width, topRight.y);
+      path.lineTo(topRight.x + width, (float) Math.max(0, topRight.y - (1.75 * scale - 0.5) * width));
+      path.lineTo((float) (topRight.x + (1 + 3.5 * scale) * width), (float) Math.max(0, topRight.y - (1.75 * scale - 0.5) * width));
+      path.lineTo((float) (topRight.x + (1 + 3.5 * scale) * width), (float) (botRight.y + (1.75 * scale - 0.5) * width));
+      path.lineTo(topRight.x + width, (float) (botRight.y + (1.75 * scale - 0.5) * width));
+      path.lineTo(topRight.x + width, botRight.y);
+      path.lineTo(topRight.x + halfWidth, mid);
+      path.close();
+      Paint paint = new Paint();
+      paint.setARGB(100, 255, 255, 255);
+      paint.setStyle(Paint.Style.FILL);
+      canvas.drawPath(path, paint);
+    }
   }
 
   @Override
@@ -237,9 +262,9 @@ public class SurfaceViewWithOverlay extends SurfaceView {
         path.close();
         Point topRight = quads[j+2];
         Point botRight = quads[j+3];
-        drawTextBox(canvas, topRight, botRight, 2);
+        drawTextBox(canvas, topRight, botRight, 2, width, height);
         if (bitmaps[i] != null) {
-          drawBitmapAtCoordinate(canvas, bitmaps[i], topRight, botRight, 2);
+          drawBitmapAtCoordinate(canvas, bitmaps[i], topRight, botRight, 2, width, height);
         }
         canvas.drawPath(path, lineBoundariesPaint);
 
