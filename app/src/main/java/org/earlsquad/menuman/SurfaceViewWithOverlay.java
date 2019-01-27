@@ -150,8 +150,10 @@ public class SurfaceViewWithOverlay extends SurfaceView {
   void drawBitmapAtCoordinate(Canvas canvas, Bitmap bitmap, Point topRight, Point botRight) {
     int halfWidth = (topRight.y - botRight.y) / 2;
     int size = (botRight.y - topRight.y) * 2;
-    Bitmap scaledb = Bitmap.createScaledBitmap(bitmap, size, size, false);
-    canvas.drawBitmap(scaledb, topRight.x - halfWidth, topRight.y + halfWidth, null);
+    if (size > 0) {
+      Bitmap scaledb = Bitmap.createScaledBitmap(bitmap, size, size, false);
+      canvas.drawBitmap(scaledb, topRight.x - halfWidth, topRight.y + halfWidth, null);
+    }
   }
 
   void drawTrapezium(Canvas canvas, Point topRight, Point botRight, int height) {
