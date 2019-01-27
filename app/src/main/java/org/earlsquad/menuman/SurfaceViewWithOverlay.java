@@ -2,8 +2,16 @@ package org.earlsquad.menuman;
 
 import android.content.Context;
 import android.graphics.*;
+import android.graphics.drawable.Drawable;
 import android.view.SurfaceView;
 import com.abbyy.mobile.rtr.ITextCaptureService;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 // Surface View combined with an overlay showing recognition results and 'progress'
 public class SurfaceViewWithOverlay extends SurfaceView {
@@ -109,12 +117,28 @@ public class SurfaceViewWithOverlay extends SurfaceView {
     this.invalidate();
   }
 
-  void drawBitmapAtCoordinate(Canvas canvas, Point topRight, Point botRight) {
-    int halfWidth = (topRight.y - botRight.y) / 2;
-    int size = (botRight.y - topRight.y) * 2;
+  void drawBitmapAtCoordinate(final Canvas canvas, final Point topRight, Point botRight) {
+    final int halfWidth = (topRight.y - botRight.y) / 2;
+    final int size = (botRight.y - topRight.y) * 2;
+    Picasso.get().load("https://steamykitchen.com/wp-content/uploads/2010/03/xiao-long-bao.jpg").into(new Target() {
+      @Override
+      public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+        Bitmap food = Bitmap.createScaledBitmap(bitmap, size, size, false);
+        canvas.drawBitmap(food, topRight.x - halfWidth, topRight.y + halfWidth, null);
+      }
+
+      @Override
+      public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+      }
+
+      @Override
+      public void onPrepareLoad(Drawable placeHolderDrawable) {}
+    });
     Bitmap b=BitmapFactory.decodeResource(getResources(), R.drawable.food);
     Bitmap scaledb = Bitmap.createScaledBitmap(b, size, size, false);
-    canvas.drawBitmap(scaledb, topRight.x - halfWidth, topRight.y + halfWidth, null);
+//    Bitmap food = getBitmapFromURL("https://static.independent.co.uk/s3fs-public/thumbnails/image/2017/02/07/15/chinese.jpg?w968");
+//    canvas.drawBitmap(scaledb, topRight.x - halfWidth, topRight.y + halfWidth, null);
   }
 
   void drawTrapezium(Canvas canvas, Point topRight, Point botRight, int height) {
