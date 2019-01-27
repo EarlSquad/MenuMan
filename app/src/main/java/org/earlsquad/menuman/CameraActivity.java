@@ -14,8 +14,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
@@ -28,7 +31,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings("deprecation")
-public class CameraActivity extends Activity {
+public class CameraActivity extends AppCompatActivity {
 
   ///////////////////////////////////////////////////////////////////////////////
   // Some application settings that can be changed to modify application behavior:
@@ -113,21 +116,30 @@ public class CameraActivity extends Activity {
             if (resultStatus.ordinal() >= 3) {
               // The result is stable enough to show something to the user
               List<ITextCaptureService.TextLine> filteredLines = new ArrayList<>();
+              menuItems.clear();
               List<String> urls = new ArrayList<>();
               for (ITextCaptureService.TextLine line : lines) {
                 MenuItem searchResult = database.search(line.Text);
                 if (searchResult != null) {
-//                  Log.d("SEARCH", line.Text + " => " + searchResult);
+                  //                  Log.d("SEARCH", line.Text + " => " + searchResult);
                   filteredLines.add(line);
+                  menuItems.add(line.Text);
                   urls.add(searchResult.getImageURL1());
                 }
               }
-              ITextCaptureService.TextLine[] filteredLinesArr = new ITextCaptureService.TextLine[filteredLines.size()];
+              ITextCaptureService.TextLine[] filteredLinesArr =
+                  new ITextCaptureService.TextLine[filteredLines.size()];
               String[] urlsArr = new String[urls.size()];
               filteredLines.toArray(filteredLinesArr);
               urls.toArray(urlsArr);
-//              Log.d("URLS", Arrays.toString(urlsArr));
+              //              Log.d("URLS", Arrays.toString(urlsArr));
               surfaceViewWithOverlay.setLines(filteredLinesArr, resultStatus, urlsArr);
+              adapter.notifyDataSetChanged();
+              if (filteredLines.size() == 0) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+              } else if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_HIDDEN) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+              }
             } else {
               // The result is not stable. Show nothing
               surfaceViewWithOverlay.setLines(
@@ -710,13 +722,22 @@ public class CameraActivity extends Activity {
     }
   }
 
+  private ItemInfoPagerAdapter adapter;
+  private final List<String> menuItems = new ArrayList<>();
+  private BottomSheetBehavior<ViewPager> bottomSheetBehavior;
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_camera);
 
     database = new MenuDatabase(CameraActivity.this);
-    database.test();
+
+    adapter = new ItemInfoPagerAdapter(getSupportFragmentManager(), menuItems);
+    ViewPager viewPager = findViewById(R.id.bottom_sheet_viewpager);
+    viewPager.setAdapter(adapter);
+    bottomSheetBehavior = BottomSheetBehavior.from(viewPager);
+    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
     // Retrieve some ui components
     warningTextView = findViewById(R.id.warningText);
